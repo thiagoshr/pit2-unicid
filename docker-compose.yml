@@ -44,6 +44,19 @@ services:
     ]
     networks:
       - cafeteria
+    depends_on:
+      - database
+
+  proxy:
+    container_name: proxy
+    image: cafeteria/proxy
+    build:
+      context: proxy
+      dockerfile: Dockerfile
+    networks:
+      - cafeteria
+    depends_on:
+      - backend
 
 volumes:
   database-storage:
