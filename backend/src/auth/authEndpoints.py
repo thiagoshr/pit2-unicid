@@ -4,6 +4,22 @@ from datetime import datetime as datetime
 from flask import request
 from utilities import dbQuery, failResult, successResult
 
+def validateSession(chave_sessao: str):
+	"""
+	output: id_usuario
+	"""
+
+	sql = """
+		SELECT id_usuario, (expires_at > CURRENT_TIMESTAMP) as "valid"
+		FROM sessao
+		WHERE chave = %s;
+"""
+	dbResult = dbQuery(sql, (chave_sessao,))
+	
+	if len(dbResult) < 1 or not dbResult[0]['valid']:
+		raise PermissionError('Unauthenticated')
+	return dbResult['id_usuario']
+
 def authEndpoints(app):
 	@app.route('/auth/login', methods=['POST'])
 	def login():
@@ -48,3 +64,27 @@ def authEndpoints(app):
 				'chave_sessao': chave,
 				'tipo': int(userData['tipo'])
 			}])
+		
+	@app.route('/auth/logout', methods=['POST'])
+	def logout():
+		"""
+			encerra sessão
+
+			inputs:
+				chave_sessao
+			outputs:
+				success
+		"""
+
+		sql = """
+			UPDATE sessao
+			SET expires_at = CURRENT_TIMESTAMP
+			WHERE chave = %s
+			RETURNING chave;
+		"""
+
+		dbResult = dbQuery(sql, (request.form['chave_sessao'],))
+		if len(dbResult) < 1:
+			return failResult('Invalid session', 400)
+		return successResult([])
+	
