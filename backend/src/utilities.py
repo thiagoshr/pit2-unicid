@@ -21,3 +21,8 @@ def dbQuery(query : str, params : tuple):
 
 	return result
 
+def failResult(msg: str, http_code: int):
+	return {'success' : False, 'error': msg}, http_code
+
+def successResult(data: list):
+	return {'success': True, 'data': data}, 200 # http 200 ok
