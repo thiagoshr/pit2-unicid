@@ -40,13 +40,13 @@ def authEndpoints(app):
 			WHERE username = %s;
 		"""
 
-		dbResult = dbQuery(sql, (request.form['usuario'],))
+		dbResult = dbQuery(sql, (request.json['usuario'],))
 		if len(dbResult) < 1:
 			return failResult('Unauthenticated', 403)
 		
 		userData = dbResult[0]
 		
-		if bcrypt.checkpw(str(request.form['senha']).encode('utf-8'), str(userData['hash_senha']).encode('utf-8')):
+		if bcrypt.checkpw(str(request.json['senha']).encode('utf-8'), str(userData['hash_senha']).encode('utf-8')):
 			builder = hashlib.sha256()
 			builder.update(datetime.now().isoformat().encode('utf-8'))
 			builder.update(str(userData['id']).encode('utf-8'))
@@ -83,7 +83,7 @@ def authEndpoints(app):
 			RETURNING chave;
 		"""
 
-		dbResult = dbQuery(sql, (request.form['chave_sessao'],))
+		dbResult = dbQuery(sql, (request.json['chave_sessao'],))
 		if len(dbResult) < 1:
 			return failResult('Invalid session', 400)
 		return successResult([])
@@ -102,7 +102,7 @@ def authEndpoints(app):
 		"""
 
 		try:
-			uid = validateSession(request.form['chave_sessao'])
+			uid = validateSession(request.json['chave_sessao'])
 
 			sql = """
 				UPDATE sessao
@@ -113,7 +113,7 @@ def authEndpoints(app):
 				RETURNING chave;
 			"""
 
-			dbResult = dbQuery(sql, (request.form['chave_sessao'],))
+			dbResult = dbQuery(sql, (request.json['chave_sessao'],))
 			if len(dbResult) < 1 or 'chave' not in dbResult[0]:
 				raise PermissionError('Unauthenticated')
 			

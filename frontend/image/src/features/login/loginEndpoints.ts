@@ -1,4 +1,4 @@
-import { API_TAG_LOGIN, cafeteriaApi } from "../../services/api";
+import { API_TAG_LOGIN, ApiSuccessResult, cafeteriaApi } from "../../services/api";
 
 export interface LoginParams {
 	usuario : string,
@@ -17,7 +17,9 @@ const loginEndpoints = cafeteriaApi.injectEndpoints({
 				url: 'auth/reauth',
 				body: {chave_sessao}
 			}),
-			transformResponse: (result : SessionData[]) => result[0],
+			transformResponse: (result : ApiSuccessResult<SessionData>) => {
+				return result.data[0];
+			},
 			providesTags: (result) => result ? [{type: API_TAG_LOGIN, id: 'session-data'}] : []
 		}),
 		login: build.mutation<SessionData, LoginParams>({
@@ -25,8 +27,15 @@ const loginEndpoints = cafeteriaApi.injectEndpoints({
 				url: 'auth/login',
 				body: {usuario, senha}
 			}),
-			transformResponse: (result : SessionData[]) => result[0],
+			transformResponse: (result : ApiSuccessResult<SessionData>) => {
+				return result.data[0]
+			},
 			invalidatesTags: (result) => result ? [{ type: API_TAG_LOGIN, id: 'session-data'}] : []
 		})
 	})
-})
+});
+
+export const {
+	useReauthQuery,
+	useLoginMutation
+} = loginEndpoints;

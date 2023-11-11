@@ -10,15 +10,28 @@ import {
 	LocalCafe
 } from '@mui/icons-material';
 
+import { useLoginMutation } from './loginEndpoints';
+import { ApiFailResult } from '../../services/api';
+
 export function LoginScreen() {
-	function handleSubmit(event : any) {
+	const [doLogin] = useLoginMutation();
+
+	async function handleSubmit(event : any) {
 		event.preventDefault();
 
 		const data = new FormData(event.currentTarget);
-		alert(JSON.stringify({
-			username: data.get('username'),
-			password: data.get('password')
-		}));
+		const params = {
+			usuario: data.get('username')?.toString() ?? '',
+			senha: data.get('password')?.toString() ?? ''
+		};
+		let result = {};
+
+		try {
+			result = await doLogin(params).unwrap();
+		} catch (err : any) {
+			result = err;
+		}
+		console.log(result);
 	}
 
 	return (

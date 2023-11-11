@@ -5,7 +5,11 @@ export const store = configureStore({
   reducer: {
     [cafeteriaApi.reducerPath]: cafeteriaApi.reducer,
   },
-})
+  middleware: getDefaultMiddleware => 
+    getDefaultMiddleware().concat([
+      cafeteriaApi.middleware
+    ])
+});
 
 export type AppDispatch = typeof store.dispatch
 export type RootState = ReturnType<typeof store.getState>
