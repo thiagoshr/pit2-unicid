@@ -18,7 +18,7 @@ def validateSession(chave_sessao: str):
 	
 	if len(dbResult) < 1 or not dbResult[0]['valid']:
 		raise PermissionError('Unauthenticated')
-	return dbResult['id_usuario']
+	return dbResult[0]['id_usuario']
 
 def authEndpoints(app):
 	@app.route('/auth/login', methods=['POST'])
@@ -87,4 +87,52 @@ def authEndpoints(app):
 		if len(dbResult) < 1:
 			return failResult('Invalid session', 400)
 		return successResult([])
+	
+	@app.route('/auth/reauth', methods=['POST'])
+	def reauth():
+		"""
+			reautentica sessão, reobtendo os dados da mesma e extendendo validade
+
+			inputs:
+				chave_sessao
+			outputs:
+				success
+				chave_sessao
+				tipo
+		"""
+
+		try:
+			uid = validateSession(request.form['chave_sessao'])
+
+			sql = """
+				UPDATE sessao
+				SET expires_at = CURRENT_TIMESTAMP + INTERVAL '10 minute'
+				WHERE
+					chave = %s AND 
+					expires_at > CURRENT_TIMESTAMP
+				RETURNING chave;
+			"""
+
+			dbResult = dbQuery(sql, (request.form['chave_sessao'],))
+			if len(dbResult) < 1 or 'chave' not in dbResult[0]:
+				raise PermissionError('Unauthenticated')
+			
+			chave = dbResult[0]['chave']
+
+			sql = """
+			SELECT
+				u.tipo
+			FROM
+				sessao s INNER JOIN usuario u ON u.id = s.id_usuario
+			WHERE
+				s.chave = %s;
+			"""
+			dbResult = dbQuery(sql, (chave,))
+
+			return successResult([{
+				'chave_sessao': chave,
+				'tipo': dbResult[0]['tipo']
+			}])
+		except PermissionError as ex:
+			return failResult(ex.args[0], 403)
 	
