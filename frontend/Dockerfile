@@ -4,18 +4,24 @@ WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 EXPOSE 3000
 
-COPY package.json .
-COPY tsconfig.json .
-COPY tsconfig.node.json .
-COPY vite.config.ts .
+COPY image/package.json .
+COPY image/tsconfig.json .
+COPY image/tsconfig.node.json .
+COPY image/vite.config.ts .
+
+
 
 FROM base AS dev
+WORKDIR /app
+
 CMD ["npm", "start"]
+
+
 
 FROM base as builder
 RUN npm install
 RUN npm cache verify
-COPY src .
+COPY image/src .
 RUN npm run build 
 
 FROM nginx:stable-alpine AS prod

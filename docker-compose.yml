@@ -50,12 +50,12 @@ services:
   frontend:
     container_name: frontend
     build:
-      context: frontend/image
+      context: frontend/
       dockerfile: Dockerfile
       target: dev
     image: cafeteria/frontend
     volumes:
-      - .:/app/
+      - ./frontend/image:/app/
     depends_on:
       - backend
     networks:
