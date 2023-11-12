@@ -12,12 +12,12 @@ import {
 } from './features/login/LoginScreen';
 
 import {
-  createBrowserRouter,
+  createHashRouter,
   RouterProvider
 } from 'react-router-dom';
 import { Landing } from "./features/landing/Landing";
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: '/',
     element: <LoginScreen />
