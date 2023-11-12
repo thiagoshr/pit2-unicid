@@ -1,3 +1,7 @@
+import { useEffect } from 'react';
+import { useLoginMutation, useReauthQuery } from './loginEndpoints';
+import { useDispatch, useSelector } from 'react-redux';
+
 import { 
 	Button,
 	TextField,
@@ -10,11 +14,31 @@ import {
 	LocalCafe
 } from '@mui/icons-material';
 
-import { useLoginMutation } from './loginEndpoints';
-import { ApiFailResult } from '../../services/api';
+
+import { RootState } from '../../app/store';
+import { clearKey, loadKey, selectSessionKey } from './sessionSlice';
 
 export function LoginScreen() {
+	const dispatch = useDispatch();
 	const [doLogin] = useLoginMutation();
+	const sessionKey = useSelector<RootState, string>(selectSessionKey);
+	const sessionData = useReauthQuery(sessionKey, {
+		skip: sessionKey === '' || !sessionKey
+	});
+
+	useEffect(() => {
+		const storedKey = localStorage.getItem('chave_sessao');
+		if (storedKey && (sessionKey === '' || !sessionKey)) {
+			dispatch(loadKey(storedKey));
+		}
+	}, [sessionKey]);
+
+	useEffect(() => {
+		if (sessionData.isError) {
+			localStorage.removeItem('chave_sessao');
+			dispatch(clearKey());
+		}
+	}, [sessionData.isError]);
 
 	async function handleSubmit(event : any) {
 		event.preventDefault();
@@ -24,14 +48,15 @@ export function LoginScreen() {
 			usuario: data.get('username')?.toString() ?? '',
 			senha: data.get('password')?.toString() ?? ''
 		};
-		let result = {};
 
 		try {
-			result = await doLogin(params).unwrap();
+			const result = await doLogin(params).unwrap();
+			localStorage.setItem('chave_sessao', result.chave_sessao);
+			dispatch(loadKey(result.chave_sessao));
 		} catch (err : any) {
-			result = err;
+			localStorage.removeItem('chave_sessao');
+			dispatch(clearKey());
 		}
-		console.log(result);
 	}
 
 	return (
