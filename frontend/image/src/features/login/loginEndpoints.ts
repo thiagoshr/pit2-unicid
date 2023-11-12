@@ -37,7 +37,7 @@ const loginEndpoints = cafeteriaApi.injectEndpoints({
 				url: 'auth/logout',
 				body: {chave_sessao}
 			}),
-			transformResponse: (result: ApiSuccessResult<any[]>) => ({
+			transformResponse: (result: ApiSuccessResult<{success: boolean}[]>) => ({
 				success: result.success
 			}),
 			invalidatesTags: (result) => result?.success ? [{ type: API_TAG_LOGIN, id: 'session-data'}] : []
