@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { useLogoutMutation, useReauthQuery } from "../login/loginEndpoints";
 import { clearKey, selectSessionKey } from "../login/sessionSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Outlet } from "react-router-dom";
 
 import {
 	AppBar,
@@ -17,6 +17,7 @@ import {
 	LocalCafe,
 	Logout
 } from '@mui/icons-material';
+import { UserTypes } from "../../app/constants";
 
 
 
@@ -40,6 +41,25 @@ export function Landing() {
 		sessionKey,
 		sessionData
 	]);
+
+	useEffect(() => {
+		if(sessionData?.data?.tipo) {
+			switch (sessionData.data.tipo) {
+				case UserTypes.barista:
+					navigate('barista/');
+					break;
+				case UserTypes.gerente:
+					navigate('gerente/');
+					break;
+				case UserTypes.op_caixa:
+					navigate('caixa/');
+					break;
+				case UserTypes.cliente:
+					navigate('cliente/');
+					break;
+			}
+		}
+	}, [sessionData?.data?.tipo]);
 
 	async function handleLogout() {
 		try {
@@ -75,6 +95,7 @@ export function Landing() {
 					</IconButton>
 				</Toolbar>
 			</AppBar>
+			<Outlet />
 		</Box>
 	);
 }

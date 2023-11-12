@@ -24,7 +24,25 @@ const router = createHashRouter([
   },
   {
     path: '/app',
-    element: <Landing />
+    element: <Landing />,
+    children: [
+      {
+        path: 'barista/',
+        element: <div>Interface Barista</div>
+      },
+      {
+        path: 'gerente/',
+        element: <div>Interface Gerente</div>
+      },
+      {
+        path: 'caixa/',
+        element: <div>Interface Caixa</div>
+      },
+      {
+        path: 'cliente/',
+        element: <div>Interface Cliente</div>
+      }
+    ]
   }
 ]);
 
