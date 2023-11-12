@@ -31,11 +31,22 @@ const loginEndpoints = cafeteriaApi.injectEndpoints({
 				return result.data[0]
 			},
 			invalidatesTags: (result) => result ? [{ type: API_TAG_LOGIN, id: 'session-data'}] : []
+		}),
+		logout: build.mutation<{success: boolean}, string>({
+			query: (chave_sessao) => ({
+				url: 'auth/logout',
+				body: {chave_sessao}
+			}),
+			transformResponse: (result: ApiSuccessResult<any[]>) => ({
+				success: result.success
+			}),
+			invalidatesTags: (result) => result?.success ? [{ type: API_TAG_LOGIN, id: 'session-data'}] : []
 		})
 	})
 });
 
 export const {
 	useReauthQuery,
-	useLoginMutation
+	useLoginMutation,
+	useLogoutMutation
 } = loginEndpoints;
