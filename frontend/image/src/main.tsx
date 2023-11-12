@@ -15,12 +15,17 @@ import {
   createBrowserRouter,
   RouterProvider
 } from 'react-router-dom';
+import { Landing } from "./features/landing/Landing";
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <LoginScreen />
   },
+  {
+    path: '/app',
+    element: <Landing />
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

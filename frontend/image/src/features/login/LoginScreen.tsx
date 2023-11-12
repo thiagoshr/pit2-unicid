@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useLoginMutation, useReauthQuery } from './loginEndpoints';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 import { 
 	Button,
@@ -20,6 +21,7 @@ import { clearKey, loadKey, selectSessionKey } from './sessionSlice';
 
 export function LoginScreen() {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const [doLogin] = useLoginMutation();
 	const sessionKey = useSelector<RootState, string>(selectSessionKey);
 	const sessionData = useReauthQuery(sessionKey, {
@@ -39,6 +41,16 @@ export function LoginScreen() {
 			dispatch(clearKey());
 		}
 	}, [sessionData.isError]);
+
+	useEffect(() => {
+		if (
+			sessionData.isSuccess &&
+			!sessionData.isError &&
+			!sessionData.isFetching
+		) {
+			navigate('/app');
+		}
+	}, [sessionData]);
 
 	async function handleSubmit(event : any) {
 		event.preventDefault();
