@@ -42,6 +42,8 @@ services:
       "-h", "0.0.0.0",
       "-p", "5000"
     ]
+    ports:
+      - 5678:5678
     networks:
       - cafeteria
     depends_on:

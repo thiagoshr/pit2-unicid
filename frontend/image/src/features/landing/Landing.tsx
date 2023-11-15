@@ -17,8 +17,8 @@ import {
 	LocalCafe,
 	Logout
 } from '@mui/icons-material';
-import { UserTypes } from "../../app/constants";
 
+import { useEnforceHomePath } from "../../app/utilities";
 
 
 export function Landing() {
@@ -42,24 +42,7 @@ export function Landing() {
 		sessionData
 	]);
 
-	useEffect(() => {
-		if(sessionData?.data?.tipo) {
-			switch (sessionData.data.tipo) {
-				case UserTypes.barista:
-					navigate('barista/');
-					break;
-				case UserTypes.gerente:
-					navigate('gerente/');
-					break;
-				case UserTypes.op_caixa:
-					navigate('caixa/');
-					break;
-				case UserTypes.cliente:
-					navigate('cliente/');
-					break;
-			}
-		}
-	}, [sessionData?.data?.tipo]);
+	useEnforceHomePath();
 
 	async function handleLogout() {
 		try {

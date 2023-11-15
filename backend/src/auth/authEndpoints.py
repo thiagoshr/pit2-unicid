@@ -121,7 +121,8 @@ def authEndpoints(app):
 
 			sql = """
 			SELECT
-				u.tipo
+				u.tipo,
+				u.nome
 			FROM
 				sessao s INNER JOIN usuario u ON u.id = s.id_usuario
 			WHERE
@@ -131,7 +132,8 @@ def authEndpoints(app):
 
 			return successResult([{
 				'chave_sessao': chave,
-				'tipo': dbResult[0]['tipo']
+				'tipo': dbResult[0]['tipo'],
+				'nome': dbResult[0]['nome']
 			}])
 		except PermissionError as ex:
 			return failResult(ex.args[0], 403)

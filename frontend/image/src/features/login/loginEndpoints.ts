@@ -7,6 +7,7 @@ export interface LoginParams {
 
 export interface SessionData {
 	chave_sessao : string,
+	nome: string,
 	tipo : number
 }
 
