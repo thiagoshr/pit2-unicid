@@ -12,7 +12,6 @@ export function useEnforceHomePath() : void {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		console.log(location.pathname);
 		if (userData.isSuccess) {
 			if(userData.data.tipo == UserTypes.barista
 				&& !location.pathname.startsWith('/app/barista'))
