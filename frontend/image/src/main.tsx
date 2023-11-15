@@ -16,6 +16,7 @@ import {
   RouterProvider
 } from 'react-router-dom';
 import { Landing } from "./features/landing/Landing";
+import GerenteUI from "./features/gerente/GerenteUI";
 
 const router = createHashRouter([
   {
@@ -32,7 +33,7 @@ const router = createHashRouter([
       },
       {
         path: 'gerente/',
-        element: <div>Interface Gerente</div>
+        element: <GerenteUI />
       },
       {
         path: 'caixa/',
