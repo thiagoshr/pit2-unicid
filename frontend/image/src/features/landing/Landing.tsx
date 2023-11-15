@@ -10,7 +10,8 @@ import {
 	Box,
 	Toolbar,
 	Typography,
-	IconButton
+	IconButton,
+	Container
 } from '@mui/material';
 
 import {
@@ -78,6 +79,13 @@ export function Landing() {
 					</IconButton>
 				</Toolbar>
 			</AppBar>
+			{sessionData.isSuccess &&
+			<Container>
+				<Typography variant='h5' sx={{pt: 2}}>
+					Bem vindo(a), {sessionData.data.nome}!
+				</Typography>
+			</Container>
+			}
 			<Outlet />
 		</Box>
 	);
