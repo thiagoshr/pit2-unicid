@@ -2,7 +2,8 @@ CREATE TABLE produto (
 	id BIGSERIAL PRIMARY KEY,
 	nome TEXT NOT NULL,
 	descricao TEXT NOT NULL DEFAULT '',
-	valor_venda BIGINT NOT NULL DEFAULT 0
+	valor_venda BIGINT NOT NULL DEFAULT 0,
+	caminho_imagem TEXT DEFAULT ''
 );
 
 CREATE TABLE mesa (
