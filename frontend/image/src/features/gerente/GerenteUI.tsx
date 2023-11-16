@@ -7,6 +7,10 @@ import {
 	Button
 } from '@mui/material';
 
+import {
+	CategoryOutlined
+} from '@mui/icons-material';
+
 
 export default function GerenteUI (props : any) {
 	const navigate = useNavigate();
@@ -18,6 +22,7 @@ export default function GerenteUI (props : any) {
 					variant='outlined'
 					fullWidth
 					onClick={() => navigate('')}
+					startIcon={<CategoryOutlined />}
 				>Cadastro de Produtos</Button>
 			</Stack>
 		</Container>

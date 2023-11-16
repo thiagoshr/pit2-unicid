@@ -81,7 +81,7 @@ export function Landing() {
 			</AppBar>
 			{sessionData.isSuccess &&
 			<Container>
-				<Typography variant='h5' sx={{pt: 2}}>
+				<Typography variant='h6' sx={{pt: 2}}>
 					Bem vindo(a), {sessionData.data.nome}!
 				</Typography>
 			</Container>
