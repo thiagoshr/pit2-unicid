@@ -44,6 +44,8 @@ services:
     ]
     ports:
       - 5678:5678
+    volumes:
+      - product-images:/opt/cafeteria/images
     networks:
       - cafeteria
     depends_on:
@@ -72,6 +74,8 @@ services:
       dockerfile: Dockerfile
     networks:
       - cafeteria
+    volumes:
+      - product-images:/opt/cafeteria/images/
     depends_on:
       - backend
       - frontend
@@ -81,3 +85,4 @@ services:
 
 volumes:
   database-storage:
+  product-images:
